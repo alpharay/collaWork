@@ -63,7 +63,7 @@ gamma_RD_bar = gamma_SR_bar;
 sigmaSqrd = 1;
 %---------------------------------
 
-p_budget_Dbm=20; %total power budget in dBm
+p_budget_Dbm=70; %total power budget in dBm
 p_budget_inWatts=10^((p_budget_Dbm-30)/10);%total power budget in dBm
 p_budget_inWatts_divided=p_budget_inWatts/(1+2*(num_jammers)+num_relays);%dividing up the power 
 P_S=p_budget_inWatts_divided;%source power in watts

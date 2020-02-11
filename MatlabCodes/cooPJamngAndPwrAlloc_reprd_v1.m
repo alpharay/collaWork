@@ -30,9 +30,9 @@ d=1;%receiver's distance; destination fixed at 30m % (2020/02/10)
 eavesdynPos=(-4:0.05:3);%eavesdroppers dynamnic position; necessary to plot the graph of secrecy gap at with eavesdropper at different distances from the sources
 R_sec_vec = zeros(size(eavesdynPos));%(2020/02/10)
 
-tau=4; %path loss exponent
+c=4; %path loss exponent
 phi=0; %phase offset from source to destination
-pathloss_comp=-tau/2;%pathloss component
+pathloss_comp=-c;%pathloss component
 h= d.^(pathloss_comp)*exp(1j*phi); %line of sight model
 %------------------------------------------------------------------------
 
