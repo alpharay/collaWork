@@ -118,10 +118,10 @@ for eavesd_dist_iter=1:size(eavesdynPos,2),
 %     angles_SR=angles_out';%angles from source to relay. Giving their phase offset component
     
     figure(1);
-    plot(0,0,'rd');% for seeing the positioning of the source
+    plot(source_pos(1),source_pos(2),'rd');% for seeing the positioning of the source
     hold on;
     plot(d,0,'m^');% for seeing the positioning of the destination
-    plot(x_rel_dist,y_rel_dist,'g*');
+    plot(x_rel_dist,y_rel_dist,'g*');% relay distances
     
     
     
