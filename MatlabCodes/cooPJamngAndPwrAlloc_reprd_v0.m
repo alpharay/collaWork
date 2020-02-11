@@ -33,7 +33,7 @@ R_sec_vec = zeros(size(eavesdynPos));%preallocation (2020/02/10)
 
 c=4; %path loss exponent
 phi=0; %phase offset from source to destination
-pathloss_comp=-c/2;%pathloss component
+pathloss_comp=-c;%pathloss component
 h= d.^(pathloss_comp)*exp(1j*phi); %line of sight model
 %------------------------------------------------------------------------
 
@@ -277,10 +277,10 @@ for eavesd_dist_iter=1:size(eavesdynPos,2),
         %% SECRECY CAPACITY CALCULATION
         
         
-        %gamma_SR = gamma_SR_bar;% with fixed gammas        
-        %gamma_RD = gamma_RD_bar;% with fixed gammas
-        gamma_SR = P_S*abs(h_SR).^2./sigmaSqrd;% When gammas not fixed
-        gamma_RD = P_R*abs(h_RD).^2./sigmaSqrd;% When gammas not fixed    
+        gamma_SR = gamma_SR_bar;% with fixed gammas        
+        gamma_RD = gamma_RD_bar;% with fixed gammas
+%         gamma_SR = P_S*abs(h_SR).^2./sigmaSqrd;% When gammas not fixed
+%         gamma_RD = P_R*abs(h_RD).^2./sigmaSqrd;% When gammas not fixed    
                     
         gamma_SE = P_S*abs(h_SE).^2./sigmaSqrd;        
         gamma_RE = P_R*abs(h_RE).^2./sigmaSqrd;
