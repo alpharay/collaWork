@@ -23,7 +23,7 @@ mu = 0; % mean of Guassian distribution
 
 
 %--settings based on ... ----
-iter=10^3; % numbeer of Monte Carlo simulations
+iter=10^5   ; % numbeer of Monte Carlo simulations
 %d=30;%receiver's distance; destination fixed at 30m
 d=1;%receiver's distance; destination fixed at 30m % (2020/02/10)
 
