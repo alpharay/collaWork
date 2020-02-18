@@ -1,6 +1,6 @@
 %%Author: KB
 %Purpose: Trying to reproduce the results of the reference paper below
-%(Using Rayleigh Fading channels)
+%(Using Rician Fading channels)
 %1. Adapted from ...
 % Date:  2020. 02. 10. / 12:22:19 KST
 
@@ -22,15 +22,14 @@ rx=1;%number of receiver_poss
 mu = 0; % mean of Guassian distribution
 
 
-
 %--settings based on ... ----
-iter=10^3   ; % numbeer of Monte Carlo simulations
+iter=10^3; % numbeer of Monte Carlo simulations
 %d=30;%receiver's distance; destination fixed at 30m
 d=1;%receiver's distance; destination fixed at 30m % (2020/02/10)
 
 %eavesdynPos=(-16:2:32);%eavesdroppers dynamnic position; necessary to plot the graph of secrecy gap at with eavesdropper at different distances from the sources
 eavesdynPos=(-4:0.05:3);%eavesdroppers dynamnic position; necessary to plot the graph of secrecy gap at with eavesdropper at different distances from the sources
-R_sec_vec = zeros(size(eavesdynPos));%preallocation (2020/02/10)
+R_sec_vec_rayl = zeros(size(eavesdynPos));%(2020/02/10)
 
 c=4; %path loss exponent
 phi=0; %phase offset from source to destination
@@ -64,7 +63,8 @@ gamma_RD_bar = gamma_SR_bar;
 sigmaSqrd = 1;
 %---------------------------------
 
-p_budget_Dbm=70; %total power budget in dBm
+
+p_budget_Dbm=20; %total power budget in dBm
 p_budget_inWatts=10^((p_budget_Dbm-30)/10);%total power budget in dBm
 p_budget_inWatts_divided=p_budget_inWatts/(1+2*(num_jammers)+num_relays);%dividing up the power 
 P_S=p_budget_inWatts_divided;%source power in watts
@@ -142,8 +142,11 @@ for eavesd_dist_iter=1:size(eavesdynPos,2),
     %------------------------------------------------------------------------------------------
     
         
-    R_sec_summer = 0;%secrecy capacity agreggator (2020/02/10)
+    R_sec_term3_summer_rayl = 0;%secrecy capacity agreggator (2020/02/10)
     %for eavesd_dist_iter=1:size(eavesdynPos,2),%(2020/02/10)
+    gamma_SE_summer_rayl = 0; %(2020/02/11)
+    gamma_RE_summer_rayl = 0; %(2020/02/11)
+    
     for iter_num=1:iter,%(2020/02/10)
         
         %         try
@@ -224,112 +227,223 @@ for eavesd_dist_iter=1:size(eavesdynPos,2),
         %phi_jam2eavesd=rad2deg(atan(yS4./xS4));%angle (in degrees)
         
         
-        %% CHANNELS
+        %% CHANNELS (RAYLEIGH)
                
         %---CHANNEL ORIGIN: FROM SOURCE-----
-        %source to relay
+        %source to relay        
         phi_source2relay=angles_SR;
-        h_SR1=exp(1i*phi_source2relay);
-        h_SR=source2relay.*h_SR1; % Source to Relay channel
+        h_SR1_rayl=exp(1i*phi_source2relay);        
+        %h_SR1_ric=ricianChannelGen(P_S,0); %using rician fading channel
+        h_SR_rayl=source2relay.*h_SR1_rayl; % Source to Relay channel
         
-        %source to destination/receiver
+        %source to destination/receiver        
         phi_source2dest=phi;
-        h_SD1=exp(1i*phi_source2dest);
-        h_SD=source2dest.*h_SD1;
+        h_SD1_rayl=exp(1i*phi_source2dest);        
+        %h_SD1_ric = ricianChannelGen(P_S,0); %using rician fading channel
+        h_SD_rayl=source2dest.*h_SD1_rayl;
         
-        %source to eavesdropper
+        %source to eavesdropper        
         phi_source2eavesd=atan(source2eavesd);%angle (in radians)
-        h_SE1=exp(1i*phi_source2eavesd);
-        h_SE=source2eavesd.*h_SE1;
+        h_SE1_rayl=exp(1i*phi_source2eavesd);
+        %h_SE1_ric=ricianChannelGen(P_S,0); %using rician fading channel
+        h_SE_rayl=source2eavesd.*h_SE1_rayl;
         
         
         %---CHANNEL ORIGIN: RELAY-----
-        %relay to destination
-        h_RD1=exp(1i*phi_relay2dest);
-        h_RD=relay2dest.*h_RD1; % Source to Relay channel
-        h_RD=h_RD';
+        %relay to destination        
+        h_RD1_rayl=exp(1i*phi_relay2dest);
+        %h_RD1_ric=ricianChannelGen(P_R,0); %using rician fading channel
+        h_RD_rayl=relay2dest.*h_RD1_rayl; % Source to Relay channel
+        h_RD_rayl=h_RD_rayl';
         
         %relay to eavesdropper
-        %h_RE1=(randn(1,num_relays)+randn(1,num_relays)*1i)/sqrt(2);
-        h_RE1=exp(1i*phi_relay2eavesd);
-        h_RE=relay2eavesd.*h_RE1; % Source to Relay channel
-        h_RE=h_RE';
+        %h_RE1_rayl=(randn(1,num_relays)+randn(1,num_relays)*1i)/sqrt(2);
+        h_RE1_rayl=exp(1i*phi_relay2eavesd);
+        %h_RE1_ric=ricianChannelGen(P_R,0); %using rician fading channel
+        h_RE_rayl=relay2eavesd.*h_RE1_rayl; % Source to Relay channel
+        h_RE_rayl=h_RE_rayl';
         
         %---CHANNEL ORIGIN: JAMMER-----
         %jammer to relay
         
-        h_JR1=exp(1i*jam2relay_angles);
-        h_JR_vec=jam2relay.*h_JR1;
-        h_JR=h_JR_vec;
-        h_JR=h_JR';
+        h_JR1_rayl=exp(1i*jam2relay_angles);
+        %h_JR1_ric=ricianChannelGen(P_J,0); %using rician fading channel
+        h_JR_vec_rayl=jam2relay.* h_JR1_rayl;
+        h_JR_rayl=h_JR_vec_rayl;
+        h_JR_rayl=h_JR_rayl';
         
         %jammer to destination/receiver
-        h_JD1=exp(1i*phi_jam2dest);
-        h_JD=jam2dest.*h_JD1;
-        h_JD=h_JD';
+        h_JD1_rayl=exp(1i*phi_jam2dest);
+        %h_JD1_ric=ricianChannelGen(P_J,0); %using rician fading channel
+        h_JD_rayl=jam2dest.*h_JD1_rayl;
+        h_JD_rayl=h_JD_rayl';
         
         %jammer to eavesdropper
-        h_JE1=exp(1i*phi_jam2eavesd);
-        h_JE=jam2eavesd.*h_JE1;
-        h_JE=h_JE';
+        h_JE1_rayl=exp(1i*phi_jam2eavesd);
+        %h_JE1_ric=ricianChannelGen(P_J,0); %using rician fading channel
+        h_JE_rayl=jam2eavesd.*h_JE1_rayl;
+        h_JE_rayl=h_JE_rayl';
         
        
-        
-        %% SECRECY CAPACITY CALCULATION
-        
-        
-        gamma_SR = gamma_SR_bar;% with fixed gammas        
-        gamma_RD = gamma_RD_bar;% with fixed gammas
-%         gamma_SR = P_S*abs(h_SR).^2./sigmaSqrd;% When gammas not fixed
-%         gamma_RD = P_R*abs(h_RD).^2./sigmaSqrd;% When gammas not fixed    
-                    
-        gamma_SE = P_S*abs(h_SE).^2./sigmaSqrd;        
-        gamma_RE = P_R*abs(h_RE).^2./sigmaSqrd;
-        
-        
-        A = 3*(gamma_RD).^2*gamma_RE*gamma_SE;
-        
-        B_term1 = -2*gamma_RD*gamma_RE*gamma_SR*(1+gamma_SE);
-        B_term2 = -2*gamma_RD*gamma_SE*(gamma_RD*(1+gamma_RE)-gamma_RE);
-        B = B_term1 + B_term2;
-        
-        C_term1 = gamma_SR*(1+gamma_SE)*(gamma_RD*(1+gamma_RE)-gamma_RE);
-        C_term2 = -gamma_RD*gamma_SE*(1+gamma_RE);
-        C = C_term1 + C_term2;
-        
-        betaHat_num = -B-sqrt(B^2-4*A*C);
-        betaHat_denom = 2*A;
-        betaHat = betaHat_num/betaHat_denom;
-        
-        if betaHat < (gamma_SR/gamma_RD),
-            alphaHat = gamma_RD*betaHat/gamma_SR;
-        elseif betaHat > (gamma_SR/gamma_RD),
-            alphaHat = 1;
-        end
+         %% CHANNELS (RICIAN)
                
-        alpha_ = alphaHat;
-        beta_ = betaHat;
+       %---CHANNEL ORIGIN: FROM SOURCE-----
+        %source to relay        
+        %phi_source2relay=angles_SR;
+        %h_SR1_rayl=exp(1i*phi_source2relay);        
+        h_SR1_ric=ricianChannelGen(P_S,0); %using rician fading channel
+        h_SR_ric=source2relay.*h_SR1_ric; % Source to Relay channel
         
-        R_sec_term1 = 0.5*log(1+(1-alpha_)*gamma_SE);
-        R_sec_term2 = 0.5*log((1+beta_ * gamma_RD)*(1+(1-beta_)*gamma_RE));
-        R_sec_term3 = 0.5*log((1+gamma_SE)*(1 + gamma_RE));
-        R_sec = R_sec_term1 + R_sec_term2 - R_sec_term3;
+        %source to destination/receiver        
+        %phi_source2dest=phi;
+        %h_SD1_rayl=exp(1i*phi_source2dest);        
+        h_SD1_ric = ricianChannelGen(P_S,0); %using rician fading channel
+        h_SD_ric=source2dest.*h_SD1_ric;
         
-        if R_sec < 0,
-            R_sec = 0;
-            %R_sec = R_sec*-1;
-        end
+        %source to eavesdropper        
+        %phi_source2eavesd=atan(source2eavesd);%angle (in radians)
+        %h_SE1_rayl=exp(1i*phi_source2eavesd);
+        h_SE1_ric=ricianChannelGen(P_S,0); %using rician fading channel
+        h_SE_ric=source2eavesd.*h_SE1_ric;
         
-        R_sec_summer = R_sec_summer + R_sec
+        
+        %---CHANNEL ORIGIN: RELAY-----
+        %relay to destination        
+        %h_RD1_rayl=exp(1i*phi_relay2dest);
+        h_RD1_ric=ricianChannelGen(P_R,0); %using rician fading channel
+        h_RD_ric=relay2dest.*h_RD1_ric; % Source to Relay channel
+        h_RD_ric=h_RD_ric';
+        
+        %relay to eavesdropper
+        %h_RE1_rayl=(randn(1,num_relays)+randn(1,num_relays)*1i)/sqrt(2);
+        %h_RE1_rayl=exp(1i*phi_relay2eavesd);
+        h_RE1_ric=ricianChannelGen(P_R,0); %using rician fading channel
+        h_RE_ric=relay2eavesd.*h_RE1_ric; % Source to Relay channel
+        h_RE_ric=h_RE_ric';
+        
+        %---CHANNEL ORIGIN: JAMMER-----
+        %jammer to relay
+        
+        %h_JR1_rayl=exp(1i*jam2relay_angles);
+        h_JR1_ric=ricianChannelGen(P_J,0); %using rician fading channel
+        h_JR_vec_ric=jam2relay.* h_JR1_ric;
+        h_JR_ric=h_JR_vec_ric;
+        h_JR_ric=h_JR_ric';
+        
+        %jammer to destination/receiver
+        h_JD1_rayl=exp(1i*phi_jam2dest);
+        %h_JD1_ric=ricianChannelGen(P_J,0); %using rician fading channel
+        h_JD=jam2dest.*h_JD1_rayl;
+        h_JD_rayl=h_JD_rayl';
+        
+        %jammer to eavesdropper
+        %h_JE1_rayl=exp(1i*phi_jam2eavesd);
+        h_JE1_ric=ricianChannelGen(P_J,0); %using rician fading channel
+        h_JE_ric=jam2eavesd.*h_JE1_ric;
+        h_JE_ric=h_JE_ric';
+        
+        
+        %% SECRECY CAPACITY CALCULATION (RAYLAY)
+        
+        
+        gamma_SR_rayl = gamma_SR_bar;% with fixed gammas        
+        gamma_RD_rayl = gamma_RD_bar;% with fixed gammas
+        %gamma_SR_rayl = P_S*abs(h_SR).^2./sigmaSqrd;% When gammas not fixed
+        %gamma_RD_rayl = P_R*abs(h_RD).^2./sigmaSqrd;% When gammas not fixed
+        
+        gamma_SE_rayl = P_S*abs(h_SE_rayl).^2./sigmaSqrd; 
+        gamma_SE_summer_rayl = gamma_SE_summer_rayl + gamma_SE_rayl;
+        
+        gamma_RE_rayl = P_R*abs(h_RE_rayl).^2./sigmaSqrd;
+        gamma_RE_summer_rayl = gamma_RE_summer_rayl + gamma_RE_rayl;
+        
+        A_rayl = 3*(gamma_RD_rayl).^2*gamma_RE_rayl*gamma_SE_rayl;
+        
+        B_term1_rayl = -2*gamma_RD_rayl*gamma_RE_rayl*gamma_SR_rayl*(1+gamma_SE_rayl);
+        B_term2_rayl = -2*gamma_RD_rayl*gamma_SE_rayl*(gamma_RD_rayl*(1+gamma_RE_rayl)-gamma_RE_rayl);
+        B_rayl = B_term1_rayl + B_term2_rayl;
+        
+        C_term1_rayl = gamma_SR_rayl*(1+gamma_SE_rayl)*(gamma_RD_rayl*(1+gamma_RE_rayl)-gamma_RE_rayl);
+        C_term2_rayl = -gamma_RD_rayl*gamma_SE_rayl*(1+gamma_RE_rayl);
+        C_rayl = C_term1_rayl + C_term2_rayl;
+        
+        betaHat_num_rayl = -B_rayl-sqrt(B_rayl^2-4*A_rayl*C_rayl);
+        betaHat_denom_rayl = 2*A_rayl;
+        betaHat_rayl = betaHat_num_rayl/betaHat_denom_rayl;
+        
+        
+        
+        
+        R_sec_term3_rayl = log((1+gamma_SE_rayl)*(1 + gamma_RE_rayl));        
+        
+        R_sec_term3_summer_rayl = R_sec_term3_summer_rayl + R_sec_term3_rayl;
+        
+        
+        
+        gamma_SR_rayl = gamma_SR_bar;% with fixed gammas        
+        gamma_RD_rayl = gamma_RD_bar;% with fixed gammas
+        %gamma_SR_rayl = P_S*abs(h_SR).^2./sigmaSqrd;% When gammas not fixed
+        %gamma_RD_rayl = P_R*abs(h_RD).^2./sigmaSqrd;% When gammas not fixed
+        
+        gamma_SE_rayl = P_S*abs(h_SE_rayl).^2./sigmaSqrd; 
+        gamma_SE_summer_rayl = gamma_SE_summer_rayl + gamma_SE_rayl;
+        
+        gamma_RE_rayl = P_R*abs(h_RE_rayl).^2./sigmaSqrd;
+        gamma_RE_summer_rayl = gamma_RE_summer_rayl + gamma_RE_rayl;
+        
+        A_rayl = 3*(gamma_RD_rayl).^2*gamma_RE_rayl*gamma_SE_rayl;
+        
+        B_term1_rayl = -2*gamma_RD_rayl*gamma_RE_rayl*gamma_SR_rayl*(1+gamma_SE_rayl);
+        B_term2_rayl = -2*gamma_RD_rayl*gamma_SE_rayl*(gamma_RD_rayl*(1+gamma_RE_rayl)-gamma_RE_rayl);
+        B_rayl = B_term1_rayl + B_term2_rayl;
+        
+        C_term1_rayl = gamma_SR_rayl*(1+gamma_SE_rayl)*(gamma_RD_rayl*(1+gamma_RE_rayl)-gamma_RE_rayl);
+        C_term2_rayl = -gamma_RD_rayl*gamma_SE_rayl*(1+gamma_RE_rayl);
+        C_rayl = C_term1_rayl + C_term2_rayl;
+        
+        betaHat_num_rayl = -B_rayl-sqrt(B_rayl^2-4*A_rayl*C_rayl);
+        betaHat_denom_rayl = 2*A_rayl;
+        betaHat_rayl = betaHat_num_rayl/betaHat_denom_rayl;
+        
+        
+        
+        
+        R_sec_term3_rayl = log((1+gamma_SE_rayl)*(1 + gamma_RE_rayl));        
+        
+        R_sec_term3_summer_rayl = R_sec_term3_summer_rayl + R_sec_term3_rayl;
     end
-    R_sec_vec(eavesd_dist_iter) = R_sec_summer/iter;%average of the secrecy capacity after the iterations
+    gamma_SE_Bar_rayl = gamma_SE_summer_rayl/iter;
+    gamma_RE_Bar_rayl = gamma_RE_summer_rayl/iter;
+    R_sec_term3_avg_rayl = R_sec_term3_summer_rayl/iter;
+    
+    
+    if betaHat_rayl < (gamma_SR_rayl/gamma_RD_rayl),
+        alphaHat_rayl = gamma_RD_rayl*betaHat_rayl/gamma_SR_rayl;
+    elseif betaHat_rayl > (gamma_SR_rayl/gamma_RD_rayl),
+        alphaHat_rayl = 1;
+    end
+    
+    alpha_rayl = alphaHat_rayl;
+    beta_rayl = betaHat_rayl;    
+    
+    
+    R_sec_term1_rayl = 0.5*log(1+(1-alpha_rayl)*gamma_SE_Bar_rayl);
+    R_sec_term2_ray = 0.5*log((1+beta_rayl * gamma_RD_rayl)*(1+(1-beta_rayl)*gamma_RE_Bar_rayl));    
+    R_sec_rayl = R_sec_term1_rayl + R_sec_term2_ray - 0.5*R_sec_term3_avg_rayl;
+    
+    if R_sec_rayl < 0,
+        R_sec_rayl = 0;
+        %R_sec_rayl = R_sec_rayl*-1;
+    end
+    
+    R_sec_vec_rayl(eavesd_dist_iter) = R_sec_rayl;%secrecy capacity vector
 end
 
 
 
 figure(2)
-plot(eavesdynPos,R_sec_vec,'-o');%plot of SNR gap in dB
-%semilogy(eavesdynPos,R_sec,'-o');%plot of SNR gap in dB
+plot(eavesdynPos,R_sec_vec_rayl,'-o');%plot of SNR gap in dB
+%semilogy(eavesdynPos,R_sec_vec_rayl,'-o');%plot of SNR gap in dB
 
 grid on;
 ylabel('Secrecy capacity[dB]');

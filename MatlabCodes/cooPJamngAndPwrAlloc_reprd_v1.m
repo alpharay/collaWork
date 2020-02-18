@@ -1,5 +1,6 @@
 %%Author: KB
 %Purpose: Trying to reproduce the results of the reference paper below
+%(Using Rayleigh Fading channels)
 %1. Adapted from ...
 % Date:  2020. 02. 10. / 12:22:19 KST
 
