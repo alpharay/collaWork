@@ -58,7 +58,7 @@ else
     N=1; %Number of data samples to send across the Rician Channel
     totPower=1; %Total power of LOS path & scattered paths
     %K=[1 2 5 10 20 30]; %A list of Ricial K factors to simulate
-    K=2; %A list of Ricial K factors to simulate
+    K=5; %A list of Ricial K factors to simulate
     %--------------------------------------------------------------
     
     for index =1:length(K)

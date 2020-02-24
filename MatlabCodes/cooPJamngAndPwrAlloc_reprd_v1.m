@@ -281,10 +281,10 @@ for eavesd_dist_iter=1:size(eavesdynPos,2),
         %% SECRECY CAPACITY CALCULATION
         
         
-        %gamma_SR = gamma_SR_bar;% with fixed gammas        
-        %gamma_RD = gamma_RD_bar;% with fixed gammas
-        gamma_SR = P_S*abs(h_SR).^2./sigmaSqrd;% When gammas not fixed
-        gamma_RD = P_R*abs(h_RD).^2./sigmaSqrd;% When gammas not fixed
+        gamma_SR = gamma_SR_bar;% with fixed gammas        
+        gamma_RD = gamma_RD_bar;% with fixed gammas
+%         gamma_SR = P_S*abs(h_SR).^2./sigmaSqrd;% When gammas not fixed
+%         gamma_RD = P_R*abs(h_RD).^2./sigmaSqrd;% When gammas not fixed
         
         gamma_SE = P_S*abs(h_SE).^2./sigmaSqrd; 
         gamma_SE_summer = gamma_SE_summer + gamma_SE;

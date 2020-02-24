@@ -354,8 +354,8 @@ for eavesd_dist_iter=1:size(eavesdynPos,2),
         
         gamma_SR_rayl = gamma_SR_bar;% with fixed gammas        
         gamma_RD_rayl = gamma_RD_bar;% with fixed gammas
-        %gamma_SR_rayl = P_S*abs(h_SR).^2./sigmaSqrd;% When gammas not fixed
-        %gamma_RD_rayl = P_R*abs(h_RD).^2./sigmaSqrd;% When gammas not fixed
+%         gamma_SR_rayl = P_S*abs(h_SR_rayl).^2./sigmaSqrd;% When gammas not fixed
+%         gamma_RD_rayl = P_R*abs(h_RD_rayl).^2./sigmaSqrd;% When gammas not fixed
         
         gamma_SE_rayl = P_S*abs(h_SE_rayl).^2./sigmaSqrd; 
         gamma_SE_summer_rayl = gamma_SE_summer_rayl + gamma_SE_rayl;
@@ -389,8 +389,8 @@ for eavesd_dist_iter=1:size(eavesdynPos,2),
         
         gamma_SR_ric = gamma_SR_bar;% with fixed gammas        
         gamma_RD_ric = gamma_RD_bar;% with fixed gammas
-        %gamma_SR_ric = P_S*abs(h_SR).^2./sigmaSqrd;% When gammas not fixed
-        %gamma_RD_ric = P_R*abs(h_RD).^2./sigmaSqrd;% When gammas not fixed
+%         gamma_SR_ric = P_S*abs(h_SR_ric).^2./sigmaSqrd;% When gammas not fixed
+%         gamma_RD_ric = P_R*abs(h_RD_ric).^2./sigmaSqrd;% When gammas not fixed
         
         gamma_SE_ric = P_S*abs(h_SE_ric).^2./sigmaSqrd; 
         gamma_SE_summer_ric = gamma_SE_summer_ric + gamma_SE_ric;
