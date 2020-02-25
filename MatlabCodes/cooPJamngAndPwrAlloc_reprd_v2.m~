@@ -154,7 +154,7 @@ for eavesd_dist_iter=1:size(eavesdynPos,2),
     gamma_RE_summer_ric = 0;%for Rician channel (2020/02/18)
     
     for iter_num=1:iter,%(2020/02/10)
-        sprintf('Eavesdropper current distance:%d \n Current iteration #: %d',eavesdynPos(eavesd_dist_iter),iter_num)
+        sprintf('Eavesdropper current distance:%d \n Iteration: %d',iter_num)
         %disp('Iteration: ');
         %         try
         %% DISTANCES
