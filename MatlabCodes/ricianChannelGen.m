@@ -35,7 +35,8 @@ if dataGenOn == 1
             noise=1/sqrt(2)*(randn(1,N)+1i*randn(1,N)); %AWGN noise with mean=0 var=1
             h=((sigma*randn(1,N)+s)+1i*(randn(1,N)*sigma+0)); %Rician Fading - single tap
             n = noise*10^(-EbN0dB(i)/20); %Scaling the noise for required Eb/N0
-            y_ricean=h.*x+n; %received signal through Rician channel
+            %y_ricean=h.*x+n; %received signal through Rician channel 
+            y_ricean=h.*x; %received signal through Rician channel (2020.02.25)            
             %Coherent Receiver for Rician Channel
             y_ricean_cap=y_ricean./h; %Assuming that h is known at the signal accurately
             r_ricean=real(y_ricean_cap)>0; %received symbols = 1 is real part > 0 or else it is 0
@@ -58,7 +59,7 @@ else
     N=1; %Number of data samples to send across the Rician Channel
     totPower=1; %Total power of LOS path & scattered paths
     %K=[1 2 5 10 20 30]; %A list of Ricial K factors to simulate
-    K=5; %A list of Ricial K factors to simulate
+    K=4; %A list of Ricial K factors to simulate
     %--------------------------------------------------------------
     
     for index =1:length(K)
@@ -72,7 +73,8 @@ else
             noise=1/sqrt(2)*(randn(1,N)+1i*randn(1,N)); %AWGN noise with mean=0 var=1
             h=((sigma*randn(1,N)+s)+1i*(randn(1,N)*sigma+0)); %Rician Fading - single tap
             n = noise*10^(-EbN0dB(i)/20); %Scaling the noise for required Eb/N0
-            y_ricean=h+n; %received signal through Rician channel
+            y_ricean=h; %received signal through Rician channel (2020.02.25)
+            %y_ricean=h+n; %received signal through Rician channel            
             h_rician(i) = y_ricean;
         end
         

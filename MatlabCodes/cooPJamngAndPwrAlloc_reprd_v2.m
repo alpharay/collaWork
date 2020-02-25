@@ -23,7 +23,7 @@ mu = 0; % mean of Guassian distribution
 
 
 %--settings based on ... ----
-iter=10^3; % numbeer of Monte Carlo simulations
+iter=10^4; % numbeer of Monte Carlo simulations
 %d=30;%receiver's distance; destination fixed at 30m
 d=1;%receiver's distance; destination fixed at 30m % (2020/02/10)
 
@@ -154,7 +154,7 @@ for eavesd_dist_iter=1:size(eavesdynPos,2),
     gamma_RE_summer_ric = 0;%for Rician channel (2020/02/18)
     
     for iter_num=1:iter,%(2020/02/10)
-        
+        sprintf('Iteration: %d',iter_num);
         %         try
         %% DISTANCES
             
@@ -298,33 +298,37 @@ for eavesd_dist_iter=1:size(eavesdynPos,2),
         %phi_source2relay=angles_SR;
         %h_SR1_rayl=exp(1i*phi_source2relay);        
         h_SR1_ric=ricianChannelGen(P_S,0); %using rician fading channel
-        h_SR_ric=source2relay.*h_SR1_ric; % Source to Relay channel
+        %h_SR_ric=h_SR1_ric; % Source to Relay channel
+        h_SR_ric=source2relay.*h_SR1_ric; % Source to Relay channel        
         
         %source to destination/receiver        
         %phi_source2dest=phi;
         %h_SD1_rayl=exp(1i*phi_source2dest);        
         h_SD1_ric = ricianChannelGen(P_S,0); %using rician fading channel
+        %h_SD_ric=h_SD1_ric;
         h_SD_ric=source2dest.*h_SD1_ric;
         
         %source to eavesdropper        
         %phi_source2eavesd=atan(source2eavesd);%angle (in radians)
         %h_SE1_rayl=exp(1i*phi_source2eavesd);
         h_SE1_ric=ricianChannelGen(P_S,0); %using rician fading channel
-        h_SE_ric=source2eavesd.*h_SE1_ric;
-        
+        %h_SE_ric=h_SE1_ric;
+        h_SE_ric=source2eavesd.*h_SE1_ric;        
         
         %---CHANNEL ORIGIN: RELAY-----
         %relay to destination        
         %h_RD1_rayl=exp(1i*phi_relay2dest);
         h_RD1_ric=ricianChannelGen(P_R,0); %using rician fading channel
-        h_RD_ric=relay2dest.*h_RD1_ric; % Source to Relay channel
+        %h_RD_ric=h_RD1_ric; % Source to Relay channel
+        h_RD_ric=relay2dest.*h_RD1_ric; % Source to Relay channel        
         h_RD_ric=h_RD_ric';
         
         %relay to eavesdropper
         %h_RE1_rayl=(randn(1,num_relays)+randn(1,num_relays)*1i)/sqrt(2);
         %h_RE1_rayl=exp(1i*phi_relay2eavesd);
         h_RE1_ric=ricianChannelGen(P_R,0); %using rician fading channel
-        h_RE_ric=relay2eavesd.*h_RE1_ric; % Source to Relay channel
+        %h_RE_ric=h_RE1_ric; % Source to Relay channel
+        h_RE_ric=relay2eavesd.*h_RE1_ric; % Source to Relay channel        
         h_RE_ric=h_RE_ric';
         
         %---CHANNEL ORIGIN: JAMMER-----
@@ -332,20 +336,23 @@ for eavesd_dist_iter=1:size(eavesdynPos,2),
         
         %h_JR1_rayl=exp(1i*jam2relay_angles);
         h_JR1_ric=ricianChannelGen(P_J,0); %using rician fading channel
-        h_JR_vec_ric=jam2relay.* h_JR1_ric;
+        %h_JR_vec_ric= h_JR1_ric;
+        h_JR_vec_ric=jam2relay.* h_JR1_ric;        
         h_JR_ric=h_JR_vec_ric;
         h_JR_ric=h_JR_ric';
         
         %jammer to destination/receiver
-        h_JD1_rayl=exp(1i*phi_jam2dest);
-        %h_JD1_ric=ricianChannelGen(P_J,0); %using rician fading channel
-        h_JD=jam2dest.*h_JD1_rayl;
-        h_JD_rayl=h_JD_rayl';
+        %h_JD1_rayl=exp(1i*phi_jam2dest);
+        h_JD1_ric=ricianChannelGen(P_J,0); %using rician fading channel
+        %h_JD_ric=h_JD1_ric;
+        h_JD_ric=jam2dest.*h_JD1_ric;        
+        h_JD_rayl=h_JD_ric';
         
         %jammer to eavesdropper
         %h_JE1_rayl=exp(1i*phi_jam2eavesd);
         h_JE1_ric=ricianChannelGen(P_J,0); %using rician fading channel
-        h_JE_ric=jam2eavesd.*h_JE1_ric;
+        %h_JE_ric=h_JE1_ric;
+        h_JE_ric=jam2eavesd.*h_JE1_ric;        
         h_JE_ric=h_JE_ric';
         
         
