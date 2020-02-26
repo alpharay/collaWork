@@ -28,7 +28,7 @@ iter=10^3; % numbeer of Monte Carlo simulations
 d=1;%receiver's distance; destination fixed at 30m % (2020/02/10)
 
 %eavesdynPos=(-16:2:32);%eavesdroppers dynamnic position; necessary to plot the graph of secrecy gap at with eavesdropper at different distances from the sources
-eavesdynPos=(-4:0.5:3);%eavesdroppers dynamnic position; necessary to plot the graph of secrecy gap at with eavesdropper at different distances from the sources
+eavesdynPos=(-4:0.05:3);%eavesdroppers dynamnic position; necessary to plot the graph of secrecy gap at with eavesdropper at different distances from the sources
 R_sec_vec_rayl = zeros(size(eavesdynPos));%(2020/02/10)
 R_sec_vec_ric  = zeros(size(eavesdynPos));%(2020/02/18)
 
@@ -494,6 +494,7 @@ plot(eavesdynPos,R_sec_vec_ric,'-bx');%plot of SNR gap in dB
 %semilogy(eavesdynPos,R_sec_vec_rayl,'-o');%plot of SNR gap in dB
 
 grid on;
+legend('Rayleigh','Rician')
 ylabel('Secrecy capacity[dB]');
 xlabel('distance from source [m]');
 runtimeTimeStamp();
