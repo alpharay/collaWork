@@ -28,7 +28,7 @@ iter=10^3; % numbeer of Monte Carlo simulations
 d=1;%receiver's distance; destination fixed at 30m % (2020/02/10)
 
 %eavesdynPos=(-16:2:32);%eavesdroppers dynamnic position; necessary to plot the graph of secrecy gap at with eavesdropper at different distances from the sources
-eavesdynPos=(-4:0.05:3);%eavesdroppers dynamnic position; necessary to plot the graph of secrecy gap at with eavesdropper at different distances from the sources
+eavesdynPos=(-4:0.5:3);%eavesdroppers dynamnic position; necessary to plot the graph of secrecy gap at with eavesdropper at different distances from the sources
 R_sec_vec_rayl = zeros(size(eavesdynPos));%(2020/02/10)
 R_sec_vec_ric  = zeros(size(eavesdynPos));%(2020/02/18)
 
@@ -484,7 +484,8 @@ for eavesd_dist_iter=1:size(eavesdynPos,2),
     R_sec_vec_ric(eavesd_dist_iter) = R_sec_ric;%secrecy capacity vector
 end
 
-
+R_sec_vec_rayl(isnan(R_sec_vec_rayl))= min(R_sec_vec_rayl);
+R_sec_vec_ric(isnan(R_sec_vec_ric))=min(R_sec_vec_ric);
 
 figure(2)
 hold on
